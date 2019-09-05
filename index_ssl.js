@@ -40,6 +40,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/*
 var motos = [];
 var url = "https://misitiodelivery.cl/ajax/index.php";
 var param_llamado = { accion: 'get_motos' };
@@ -51,6 +52,7 @@ request.post({
 	var aux_motos = JSON.parse(body);
 	motos = aux_motos.motos;
 });
+*/
 
 app.get('/', urlencodedParser, function(req, res){
 	res.setHeader('Content-Type', 'application/json');
