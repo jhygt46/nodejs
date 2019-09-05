@@ -1,5 +1,4 @@
 var http = require('http');
 http.createServer(function (req, res) {
-    res.writeHead(301, { "Location": "https://www.izusushi.cl" });
-    res.end();
+    res.end("BUENA NELSON");
 }).listen(80);
