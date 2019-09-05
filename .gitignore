@@ -3,6 +3,10 @@ Thumbs.db
 ehthumbs.db
 ehthumbs_vista.db
 
+cert/
+config.json
+mail_template/
+
 # Folder config file
 Desktop.ini
 
