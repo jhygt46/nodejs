@@ -4,7 +4,9 @@ ehthumbs.db
 ehthumbs_vista.db
 
 cert/
+node_modules/
 config.json
+package-lock.json
 
 # Folder config file
 Desktop.ini
