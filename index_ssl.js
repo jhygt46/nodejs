@@ -17,6 +17,8 @@ var request = require('request');
 
 var pedido_theme = fs.readFileSync("mail_template/pedido.html", { encoding: 'utf8' });
 var inicio_theme = fs.readFileSync("mail_template/base.html", { encoding: 'utf8' });
+var recuperar_theme = fs.readFileSync("mail_template/recuperar.html", { encoding: 'utf8' });
+var reserva_theme = fs.readFileSync("mail_template/reserva.html", { encoding: 'utf8' });
 
 var nodemailer = require("nodemailer");
 var fecha_correos = new Array();
@@ -55,8 +57,8 @@ request.post({
 */
 
 app.get('/', urlencodedParser, function(req, res){
-	res.setHeader('Content-Type', 'application/json');
-	res.end('200');
+	res.setHeader('Content-Type', 'text/plain');
+	res.end('');
 });
 app.post('/cambiar_posicion', urlencodedParser, function(req, res){
 	for(var i=0, ilen=motos.length; i<ilen; i++){
@@ -121,7 +123,6 @@ app.post('/add_pedido_moto', urlencodedParser, function(req, res){
 	}
 	res.end(JSON.stringify({ op: 1 }));
 });
-
 app.post('/rm_pedido_moto', urlencodedParser, function(req, res){
 	res.setHeader('Content-Type', 'application/json');
 	var id_mot = req.body.id_mot;
@@ -137,7 +138,6 @@ app.post('/rm_pedido_moto', urlencodedParser, function(req, res){
 	}
 	res.end(JSON.stringify({ op: 1 }));
 });
-
 function enviar_gmail(mailOptions){
 
 	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
@@ -184,7 +184,6 @@ function enviar_sesmail(mailOptions){
 	});
 
 }
-
 app.post('/mail_contacto', urlencodedParser, function(req, res){
 
 	var mailOptions = {
@@ -198,6 +197,22 @@ app.post('/mail_contacto', urlencodedParser, function(req, res){
 
 });
 app.post('/mail_recuperar', urlencodedParser, function(req, res){
+
+	var aux_theme = inicio_theme;
+	aux_theme = aux_theme.replace(/#ID#/g, req.body.id);
+	aux_theme = aux_theme.replace(/#CODE#/g, req.body.code);
+
+	var mailOptions1 = {
+	  	from: 'misitiodelivery@gmail.com',
+	  	to: req.body.correo,
+	  	subject: 'Bienvenido a MiSitioDelivery.cl',
+	  	html: aux_theme
+	};
+	enviar_gmail(mailOptions1);
+	res.end();
+
+});
+app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 
 	var aux_theme = inicio_theme;
 	aux_theme = aux_theme.replace(/#ID#/g, req.body.id);
@@ -295,7 +310,6 @@ app.post('/enviar_local', urlencodedParser, function(req, res){
 
 
 });
-
 app.post('/cambiar_estado', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
