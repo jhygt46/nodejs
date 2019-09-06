@@ -164,7 +164,7 @@ app.post('/mail_recuperar', urlencodedParser, function(req, res){
 	  	html: aux_theme
 	};
 	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
-	transporter.sendMail(mailOptions, function(error, info){
+	transporter.sendMail(mailOptions, function(err, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
 			res.end(JSON.stringify({op: 1}));
@@ -187,7 +187,7 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 	  	html: aux_theme
 	};
 	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
-	transporter.sendMail(mailOptions, function(error, info){
+	transporter.sendMail(mailOptions, function(err, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
 			res.end(JSON.stringify({op: 1}));
