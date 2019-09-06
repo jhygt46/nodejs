@@ -169,7 +169,7 @@ app.post('/mail_recuperar', urlencodedParser, function(req, res){
 			fecha_correos.push(new Date().getTime());
 			res.end(JSON.stringify({op: 1}));
 		}else{
-			res.end(JSON.stringify({op: 2}));
+			res.end(JSON.stringify({op: 2, err: err, info: info}));
 		}
 	});
 
@@ -192,7 +192,7 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 			fecha_correos.push(new Date().getTime());
 			res.end(JSON.stringify({op: 1}));
 		}else{
-			res.end(JSON.stringify({op: 2}));
+			res.end(JSON.stringify({op: 2, err: err, info: info}));
 		}
 	});
 
