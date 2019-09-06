@@ -167,9 +167,9 @@ app.post('/mail_recuperar', urlencodedParser, function(req, res){
 	transporter.sendMail(mailOptions, function(error, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
-			res.end(JSON.stringify({op: 1});
+			res.end(JSON.stringify({op: 1}));
 		}else{
-			res.end(JSON.stringify({op: 2});
+			res.end(JSON.stringify({op: 2}));
 		}
 	});
 
@@ -190,9 +190,9 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 	transporter.sendMail(mailOptions, function(error, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
-			res.end(JSON.stringify({op: 1});
+			res.end(JSON.stringify({op: 1}));
 		}else{
-			res.end(JSON.stringify({op: 2});
+			res.end(JSON.stringify({op: 2}));
 		}
 	});
 
