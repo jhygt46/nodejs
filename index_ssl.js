@@ -138,52 +138,6 @@ app.post('/rm_pedido_moto', urlencodedParser, function(req, res){
 	}
 	res.end(JSON.stringify({ op: 1 }));
 });
-function enviar_gmail(mailOptions){
-
-	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
-	transporter.sendMail(mailOptions, function(error, info){
-		if(!err){
-			fecha_correos.push(new Date().getTime());
-			console.log("ENVIADO DESDE GMAIL");
-		}else{
-			console.log("ERROR: ENVIO GMAIL");
-		}
-	});
-
-}
-function enviar_sesmail(mailOptions){
-
-	var params = { 
-		Destination: { 
-			ToAddresses: [] 
-		}, 
-		Message: { 
-			Body: { 
-				Html: { 
-					Charset: 'UTF-8', Data: '' 
-				} 
-			}, 
-			Subject: { 
-				Charset: 'UTF-8', Data: '' 
-			}
-		}, 
-		ReturnPath: 'misitiodelivery@gmail.com', 
-		Source: 'misitiodelivery@gmail.com'
-	};
-
-	params.Destination.ToAddresses.push(mailOptions.to);
-	params.Message.Subject.Data = mailOptions.subject;
-	params.Message.Body.Html.Data = mailOptions.body;
-
-	ses.sendEmail(params, (err, data) => { 
-		if (err){ 
-			console.log("ERROR: ENVIO SES");
-		}else{
-			console.log("ENVIADO DESDE SES");
-		}
-	});
-
-}
 app.post('/mail_contacto', urlencodedParser, function(req, res){
 
 	var mailOptions = {
@@ -214,14 +168,13 @@ app.post('/mail_recuperar', urlencodedParser, function(req, res){
 });
 app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 
-	var aux_theme = inicio_theme;
-	aux_theme = aux_theme.replace(/#ID#/g, req.body.id);
-	aux_theme = aux_theme.replace(/#CODE#/g, req.body.code);
+	var aux_theme = recuperar_theme;
+	aux_theme = aux_theme.replace(/#LINK#/g, req.body.link);
 
 	var mailOptions1 = {
 	  	from: 'misitiodelivery@gmail.com',
 	  	to: req.body.correo,
-	  	subject: 'Bienvenido a MiSitioDelivery.cl',
+	  	subject: 'Recuperar contrase&ntilde;a',
 	  	html: aux_theme
 	};
 	enviar_gmail(mailOptions1);
@@ -317,7 +270,52 @@ app.post('/cambiar_estado', urlencodedParser, function(req, res){
 	res.end(JSON.stringify({op: 1}));
 
 });
+function enviar_gmail(mailOptions){
 
+	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
+	transporter.sendMail(mailOptions, function(error, info){
+		if(!err){
+			fecha_correos.push(new Date().getTime());
+			console.log("ENVIADO DESDE GMAIL");
+		}else{
+			console.log("ERROR: ENVIO GMAIL");
+		}
+	});
+
+}
+function enviar_sesmail(mailOptions){
+
+	var params = { 
+		Destination: { 
+			ToAddresses: [] 
+		}, 
+		Message: { 
+			Body: { 
+				Html: { 
+					Charset: 'UTF-8', Data: '' 
+				} 
+			}, 
+			Subject: { 
+				Charset: 'UTF-8', Data: '' 
+			}
+		}, 
+		ReturnPath: 'misitiodelivery@gmail.com', 
+		Source: 'misitiodelivery@gmail.com'
+	};
+
+	params.Destination.ToAddresses.push(mailOptions.to);
+	params.Message.Subject.Data = mailOptions.subject;
+	params.Message.Body.Html.Data = mailOptions.body;
+
+	ses.sendEmail(params, (err, data) => { 
+		if (err){ 
+			console.log("ERROR: ENVIO SES");
+		}else{
+			console.log("ENVIADO DESDE SES");
+		}
+	});
+
+}
 http.listen(443, function(){
 	console.log('SERVER HTTPS/SOCKET START');
 });
