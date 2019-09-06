@@ -179,7 +179,7 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 	res.setHeader('Content-Type', 'application/json');
 	var aux_theme = recuperar_theme;
 	aux_theme = aux_theme.replace(/#LINK#/g, req.body.link);
-
+	/*
 	var transporter = nodemailer.createTransport({
 		service: 'Gmail',
 		auth: {
@@ -187,25 +187,14 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 			pass: 'dVGbBSxi9Hon8Bqx'
 		}
 	});
-	
+	*/
 	var mailOptions = {
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo,
 		subject: 'Recuperar contrase&ntilde;a',
 		html: aux_theme
   	};
-
-	transporter.sendMail(mailOptions, function(err, info){
-		if(!err){
-			fecha_correos.push(new Date().getTime());
-			res.end(JSON.stringify({op: 1}));
-		}else{
-			res.end(JSON.stringify({op: 2, err: err, info: info}));
-		}
-	});
-
 	/*
-	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
 	transporter.sendMail(mailOptions, function(err, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
@@ -215,6 +204,17 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 		}
 	});
 	*/
+	
+	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
+	transporter.sendMail(mailOptions, function(err, info){
+		if(!err){
+			fecha_correos.push(new Date().getTime());
+			res.end(JSON.stringify({op: 1}));
+		}else{
+			res.end(JSON.stringify({op: 2, err: err, info: info}));
+		}
+	});
+	
 
 });
 app.post('/mail_inicio', urlencodedParser, function(req, res){
