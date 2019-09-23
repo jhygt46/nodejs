@@ -191,7 +191,7 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 	var mailOptions = {
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo,
-		subject: 'Recuperar contrase&ntilde;a',
+		subject: 'Recuperar Password',
 		html: aux_theme
   	};
 	/*
@@ -215,6 +215,43 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 		}
 	});
 	
+
+});
+app.post('/mail_medici', urlencodedParser, function(req, res){
+
+	res.setHeader('Content-Type', 'application/json');
+
+	if(req.body.accion == "contacto"){
+
+		var mailOptions = {
+			from: 'misitiodelivery@gmail.com',
+			to: 'diego.gomez.bezmalinovic@gmail.com',
+			subject: 'CONTACTO SITIO WEB',
+			body: '<b>Nombre:</b> '+req.body.dominio+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Asunto:</b> '+req.body.asunto+'<br/><b>Mensaje:</b> '+req.body.mensaje+'<br/>'
+		};
+		enviar_sesmail(mailOptions);
+
+	}
+	if(req.body.accion == "reserva"){
+
+		var mailOptions1 = {
+			from: 'misitiodelivery@gmail.com',
+			to: req.body.correo,
+			subject: 'Nueva Reserva',
+			html: '<a href="http://35.225.100.155/confirmar.php?id='+req.body.id+'&code='+req.body.code+'">Confirmar</a>'
+		};
+		enviar_gmail(mailOptions1);
+
+		var mailOptions2 = {
+			from: 'misitiodelivery@gmail.com',
+			to: req.body.correo_doc,
+			subject: 'NUEVA RESERVA WEB',
+			body: '<b>Rut:</b> '+req.body.rut+'<br/><b>Nombre:</b>'+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Telefono:</b>'+req.body.telefono+'<br/>'
+		};
+		enviar_sesmail(mailOptions2);
+
+	}
+	res.end();
 
 });
 app.post('/mail_inicio', urlencodedParser, function(req, res){
