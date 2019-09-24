@@ -179,79 +179,91 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 	res.setHeader('Content-Type', 'application/json');
 	var aux_theme = recuperar_theme;
 	aux_theme = aux_theme.replace(/#LINK#/g, req.body.link);
-	/*
-	var transporter = nodemailer.createTransport({
-		service: 'Gmail',
-		auth: {
-			user: 'misitiodelivery@gmail.com',
-			pass: 'dVGbBSxi9Hon8Bqx'
-		}
-	});
-	*/
+
 	var mailOptions = {
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo,
 		subject: 'Recuperar Password',
 		html: aux_theme
   	};
-	/*
-	transporter.sendMail(mailOptions, function(err, info){
-		if(!err){
-			fecha_correos.push(new Date().getTime());
-			res.end(JSON.stringify({op: 1}));
-		}else{
-			res.end(JSON.stringify({op: 2, err: err, info: info}));
-		}
-	});
-	*/
 	
 	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
 	transporter.sendMail(mailOptions, function(err, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
-			res.end(JSON.stringify({op: 1}));
+			res.end(JSON.stringify({ op: 1 }));
 		}else{
-			res.end(JSON.stringify({op: 2, err: err, info: info}));
+			res.end(JSON.stringify({ op: 2, err: err, info: info }));
 		}
 	});
-	
 
 });
-app.post('/mail_medici', urlencodedParser, function(req, res){
+app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
+	var mailOptions = {
+		from: 'misitiodelivery@gmail.com',
+		to: 'diego.gomez.bezmalinovic@gmail.com',
+		subject: 'CONTACTO SITIO WEB',
+		body: '<b>Nombre:</b> '+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Asunto:</b> '+req.body.asunto+'<br/><b>Mensaje:</b> '+req.body.mensaje+'<br/>'
+	};
+	enviar_sesmail(mailOptions);
 
-	if(req.body.accion == "contacto"){
+});
+app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
 
-		var mailOptions = {
-			from: 'misitiodelivery@gmail.com',
-			to: 'diego.gomez.bezmalinovic@gmail.com',
-			subject: 'CONTACTO SITIO WEB',
-			body: '<b>Nombre:</b> '+req.body.dominio+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Asunto:</b> '+req.body.asunto+'<br/><b>Mensaje:</b> '+req.body.mensaje+'<br/>'
-		};
-		enviar_sesmail(mailOptions);
+	res.setHeader('Content-Type', 'application/json');
+	
+	var mailOptions2 = {
+		from: 'misitiodelivery@gmail.com',
+		to: req.body.correo_doc,
+		subject: 'NUEVA RESERVA WEB',
+		body: '<b>Rut:</b> '+req.body.rut+'<br/><b>Nombre:</b>'+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Telefono:</b>'+req.body.telefono+'<br/>'
+	};
+	var params = { 
+		Destination: { 
+			ToAddresses: [] 
+		}, 
+		Message: { 
+			Body: { 
+				Html: { 
+					Charset: 'UTF-8', Data: '' 
+				} 
+			}, 
+			Subject: { 
+				Charset: 'UTF-8', Data: '' 
+			}
+		}, 
+		ReturnPath: 'misitiodelivery@gmail.com', 
+		Source: 'misitiodelivery@gmail.com'
+	};
 
-	}
-	if(req.body.accion == "reserva"){
+	params.Destination.ToAddresses.push(mailOptions2.to);
+	params.Message.Subject.Data = mailOptions2.subject;
+	params.Message.Body.Html.Data = mailOptions2.body;
 
-		var mailOptions1 = {
-			from: 'misitiodelivery@gmail.com',
-			to: req.body.correo,
-			subject: 'Nueva Reserva',
-			html: '<a href="http://35.225.100.155/confirmar.php?id='+req.body.id+'&code='+req.body.code+'">Confirmar</a>'
-		};
-		enviar_gmail(mailOptions1);
+	ses.sendEmail(params, (err, data) => { 
+		if(!err){
+			//res.end(JSON.stringify({ op: 1 }));
+		}else{
+			//res.end(JSON.stringify({ op: 2 }));
+		}
+	});
 
-		var mailOptions2 = {
-			from: 'misitiodelivery@gmail.com',
-			to: req.body.correo_doc,
-			subject: 'NUEVA RESERVA WEB',
-			body: '<b>Rut:</b> '+req.body.rut+'<br/><b>Nombre:</b>'+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Telefono:</b>'+req.body.telefono+'<br/>'
-		};
-		enviar_sesmail(mailOptions2);
-
-	}
-	res.end();
+	var mailOptions1 = {
+		from: 'misitiodelivery@gmail.com',
+		to: req.body.correo,
+		subject: 'Nueva Reserva',
+		html: '<a href="http://35.225.100.155/confirmar.php?id='+req.body.id+'&code='+req.body.code+'">Confirmar</a>'
+	};
+	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
+	transporter.sendMail(mailOptions1, function(err, info){
+		if(!err){
+			res.end(JSON.stringify({ op: 1 }));
+		}else{
+			res.end(JSON.stringify({ op: 2 }));
+		}
+	});
 
 });
 app.post('/mail_inicio', urlencodedParser, function(req, res){
@@ -349,9 +361,9 @@ function enviar_gmail(mailOptions){
 	transporter.sendMail(mailOptions, function(error, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
-			console.log("ENVIADO DESDE GMAIL");
+			res.end(JSON.stringify({ op: 1 }));
 		}else{
-			console.log("ERROR: ENVIO GMAIL");
+			res.end(JSON.stringify({ op: 2 }));
 		}
 	});
 
@@ -381,10 +393,10 @@ function enviar_sesmail(mailOptions){
 	params.Message.Body.Html.Data = mailOptions.body;
 
 	ses.sendEmail(params, (err, data) => { 
-		if (err){ 
-			console.log("ERROR: ENVIO SES");
+		if(err){ 
+			res.end(JSON.stringify({ op: 1 }));
 		}else{
-			console.log("ENVIADO DESDE SES");
+			res.end(JSON.stringify({ op: 2 }));
 		}
 	});
 
