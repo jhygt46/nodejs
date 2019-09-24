@@ -207,13 +207,40 @@ app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 		subject: 'CONTACTO SITIO WEB',
 		body: '<b>Nombre:</b> '+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Asunto:</b> '+req.body.asunto+'<br/><b>Mensaje:</b> '+req.body.mensaje+'<br/>'
 	};
-	enviar_sesmail(mailOptions);
+	var params = { 
+		Destination: { 
+			ToAddresses: [] 
+		}, 
+		Message: { 
+			Body: { 
+				Html: { 
+					Charset: 'UTF-8', Data: '' 
+				} 
+			}, 
+			Subject: { 
+				Charset: 'UTF-8', Data: '' 
+			}
+		}, 
+		ReturnPath: 'misitiodelivery@gmail.com', 
+		Source: 'misitiodelivery@gmail.com'
+	};
+
+	params.Destination.ToAddresses.push(mailOptions.to);
+	params.Message.Subject.Data = mailOptions.subject;
+	params.Message.Body.Html.Data = mailOptions.body;
+
+	ses.sendEmail(params, (err, data) => { 
+		if(err){ 
+			res.end(JSON.stringify({ op: 1 }));
+		}else{
+			res.end(JSON.stringify({ op: 2 }));
+		}
+	});
 
 });
 app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
-	
 	var mailOptions2 = {
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo_doc,
