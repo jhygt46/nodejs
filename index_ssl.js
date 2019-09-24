@@ -230,7 +230,7 @@ app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 	params.Message.Body.Html.Data = mailOptions.body;
 
 	ses.sendEmail(params, (err, data) => { 
-		if(err){ 
+		if(!err){ 
 			res.end(JSON.stringify({ op: 1 }));
 		}else{
 			res.end(JSON.stringify({ op: 2 }));
