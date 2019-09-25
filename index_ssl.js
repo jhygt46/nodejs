@@ -241,6 +241,7 @@ app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
+
 	var mailOptions2 = {
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo_doc,
@@ -277,11 +278,26 @@ app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
 		}
 	});
 
+	var aux_theme = reserva_theme;
+
+	aux_theme = aux_theme.replace(/#ID#/g, req.body.id);
+	aux_theme = aux_theme.replace(/#CODE#/g, req.body.code);
+	aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
+	aux_theme = aux_theme.replace(/#HORA#/g, req.body.hora);
+	aux_theme = aux_theme.replace(/#SEMANA#/g, req.body.semana);
+
+	aux_theme = aux_theme.replace(/#DIA#/g, req.body.dia);
+	aux_theme = aux_theme.replace(/#MES#/g, req.body.mes);
+	aux_theme = aux_theme.replace(/#ANO#/g, req.body.ano);
+	
+	aux_theme = aux_theme.replace(/#PROFESIONAL#/g, req.body.profesional);
+	//aux_theme = aux_theme.replace(/#ESPECIALIDAD#/g, req.body.especialidad);
+
 	var mailOptions1 = {
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo,
 		subject: 'Nueva Reserva',
-		html: '<a href="http://35.225.100.155/confirmar.php?id='+req.body.id+'&code='+req.body.code+'">Confirmar</a>'
+		html: aux_theme
 	};
 	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
 	transporter.sendMail(mailOptions1, function(err, info){
