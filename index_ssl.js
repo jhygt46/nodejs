@@ -246,7 +246,7 @@ app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
 		from: 'misitiodelivery@gmail.com',
 		to: req.body.correo_doc,
 		subject: 'NUEVA RESERVA WEB',
-		body: '<b>Rut:</b> '+req.body.rut+'<br/><b>Nombre:</b>'+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Telefono:</b>'+req.body.telefono+'<br/><b>Mensaje:</b>'+req.body.mensaje+'<br/>'
+		body: '<b>Rut:</b> '+req.body.rut+'<br/><b>Nombre:</b>'+req.body.nombre+'<br/><b>Correo:</b>'+req.body.correo+'<br/><b>Telefono:</b>'+req.body.telefono+'<br/><b>Mensaje:</b>'+req.body.mensaje+'<br/><b>Fecha:</b>'+req.body.semana+' '+req.body.dia+' '+req.body.mes+' '+req.body.ano+' a las '+req.body.hora+'<br/>'
 	};
 	var params = { 
 		Destination: { 
