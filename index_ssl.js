@@ -138,18 +138,38 @@ app.post('/rm_pedido_moto', urlencodedParser, function(req, res){
 	}
 	res.end(JSON.stringify({ op: 1 }));
 });
+// MAIL CONTACTO MI SITIO DELIVERY //
 app.post('/mail_contacto', urlencodedParser, function(req, res){
 
 	var mailOptions = {
-		from: 'misitiodelivery@gmail.com',
 		to: 'diego.gomez.bezmalinovic@gmail.com',
 	  	subject: 'CONTACTO MISITIODELIVERY',
-	  	body: '<b>'+req.body.nombre+' - '+req.body.telefono+' - '+req.body.email+' - '+req.body.asunto+'</b>'
+	  	body: '<b>'+req.body.nombre+'<br/>'+req.body.telefono+'<br/>'+req.body.email+'<br/>'+req.body.asunto+'</b>'
 	};
-	enviar_sesmail(mailOptions);
-	res.end();
+
+	var params = { 
+		Destination: { ToAddresses: [] }, 
+		Message: { Body: { Html: { Charset: 'UTF-8', Data: '' } }, Subject: { Charset: 'UTF-8', Data: '' } }, 
+		ReturnPath: 'misitiodelivery@gmail.com', 
+		Source: 'misitiodelivery@gmail.com'
+	};
+
+	params.Destination.ToAddresses.push(mailOptions.to);
+	params.Message.Subject.Data = mailOptions.subject;
+	params.Message.Body.Html.Data = mailOptions.body;
+
+	ses.sendEmail(params, (err) => { 
+		if(err){ 
+			res.end(JSON.stringify({ op: 1 }));
+		}else{
+			res.end(JSON.stringify({ op: 2 }));
+		}
+	});
 
 });
+
+
+
 app.post('/mail_recuperar', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
@@ -414,19 +434,8 @@ function enviar_gmail(mailOptions){
 function enviar_sesmail(mailOptions){
 
 	var params = { 
-		Destination: { 
-			ToAddresses: [] 
-		}, 
-		Message: { 
-			Body: { 
-				Html: { 
-					Charset: 'UTF-8', Data: '' 
-				} 
-			}, 
-			Subject: { 
-				Charset: 'UTF-8', Data: '' 
-			}
-		}, 
+		Destination: { ToAddresses: [] }, 
+		Message: { Body: { Html: { Charset: 'UTF-8', Data: '' } }, Subject: { Charset: 'UTF-8', Data: '' } }, 
 		ReturnPath: 'misitiodelivery@gmail.com', 
 		Source: 'misitiodelivery@gmail.com'
 	};
