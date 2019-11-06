@@ -140,35 +140,82 @@ app.post('/rm_pedido_moto', urlencodedParser, function(req, res){
 });
 
 
-// MAIL CONTACTO MI SITIO DELIVERY //
+
+
+
+// MAIL CONTACTO MISITIODELIVERY.CL //
 app.post('/mail_contacto', urlencodedParser, function(req, res){
 
-	var mailOptions = {
-		to: 'diego.gomez.bezmalinovic@gmail.com',
-	  	subject: 'CONTACTO MISITIODELIVERY',
-	  	body: '<b>'+req.body.nombre+'<br/>'+req.body.telefono+'<br/>'+req.body.email+'<br/>'+req.body.asunto+'</b>'
-	};
+	if(req.body.codenodejs == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
 
-	var params = { 
-		Destination: { ToAddresses: [] }, 
-		Message: { Body: { Html: { Charset: 'UTF-8', Data: '' } }, Subject: { Charset: 'UTF-8', Data: '' } }, 
-		ReturnPath: 'misitiodelivery@gmail.com', 
-		Source: 'misitiodelivery@gmail.com'
-	};
+		var mailOptions = {
+			to: 'diego.gomez.bezmalinovic@gmail.com',
+			subject: 'CONTACTO MISITIODELIVERY',
+			body: '<b>'+req.body.nombre+'<br/>'+req.body.telefono+'<br/>'+req.body.email+'<br/>'+req.body.asunto+'</b>'
+		};
 
-	params.Destination.ToAddresses.push(mailOptions.to);
-	params.Message.Subject.Data = mailOptions.subject;
-	params.Message.Body.Html.Data = mailOptions.body;
+		var params = { 
+			Destination: { ToAddresses: [] }, 
+			Message: { Body: { Html: { Charset: 'UTF-8', Data: '' } }, Subject: { Charset: 'UTF-8', Data: '' } }, 
+			ReturnPath: 'misitiodelivery@gmail.com', 
+			Source: 'misitiodelivery@gmail.com'
+		};
 
-	ses.sendEmail(params, (err) => { 
-		if(err){ 
-			res.end(JSON.stringify({ op: 1 }));
-		}else{
-			res.end(JSON.stringify({ op: 2 }));
-		}
-	});
+		params.Destination.ToAddresses.push(mailOptions.to);
+		params.Message.Subject.Data = mailOptions.subject;
+		params.Message.Body.Html.Data = mailOptions.body;
+
+		ses.sendEmail(params, (err) => { 
+			if(!err){ 
+				res.end(JSON.stringify({ op: 1 }));
+			}else{
+				res.end(JSON.stringify({ op: 2 }));
+			}
+		});
+
+	}
 
 });
+// MAIL CREAR DOMINIO MISITIODELIVERY.CL //
+app.post('/mail_inicio', urlencodedParser, function(req, res){
+
+	if(req.body.codenodejs == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
+
+		var mailOptions2 = {
+			from: 'misitiodelivery@gmail.com',
+			to: 'diego.gomez.bezmalinovic@gmail.com',
+			subject: 'NUEVO DOMINIO MISITIODELIVERY',
+			body: '<b>NUEVO DOMINIO '+req.body.dominio+' CORREO: '+req.body.correo+'</b>'
+		};
+		enviar_sesmail(mailOptions2);
+
+		var aux_theme = inicio_theme;
+		aux_theme = aux_theme.replace(/#ID#/g, req.body.id);
+		aux_theme = aux_theme.replace(/#CODE#/g, req.body.code);
+
+		var mailOptions1 = {
+			from: 'misitiodelivery@gmail.com',
+			to: req.body.correo,
+			subject: 'Bienvenido a MiSitioDelivery.cl',
+			html: aux_theme
+		};
+
+		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
+		transporter.sendMail(mailOptions1, function(err, info){
+			if(!err){
+				fecha_correos.push(new Date().getTime());
+				res.end(JSON.stringify({ op: 1 }));
+			}else{
+				res.end(JSON.stringify({ op: 2 }));
+			}
+		});
+	}
+
+});
+
+
+
+
 
 
 
@@ -331,30 +378,9 @@ app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
 	});
 
 });
-app.post('/mail_inicio', urlencodedParser, function(req, res){
 
-	var aux_theme = inicio_theme;
-	aux_theme = aux_theme.replace(/#ID#/g, req.body.id);
-	aux_theme = aux_theme.replace(/#CODE#/g, req.body.code);
 
-	var mailOptions1 = {
-	  	from: 'misitiodelivery@gmail.com',
-	  	to: req.body.correo,
-	  	subject: 'Bienvenido a MiSitioDelivery.cl',
-	  	html: aux_theme
-	};
-	enviar_gmail(mailOptions1);
 
-	var mailOptions2 = {
-	  	from: 'misitiodelivery@gmail.com',
-	  	to: 'diego.gomez.bezmalinovic@gmail.com',
-	  	subject: 'NUEVO DOMINIO MISITIODELIVERY',
-	  	body: '<b>NUEVO DOMINIO '+req.body.dominio+' CORREO: '+req.body.correo+'</b>'
-	};
-	enviar_sesmail(mailOptions2);
-	res.end();
-
-});
 app.post('/enviar_chat', urlencodedParser, function(req, res){
 	res.setHeader('Content-Type', 'application/json');
 	if(req.body.accion == "enviar_mensaje_local" && req.body.hash == "hash"){
@@ -394,6 +420,8 @@ app.post('/enviar_local', urlencodedParser, function(req, res){
 		aux_theme = aux_theme.replace(/#pedido_code#/g, req.body.pedido_code);
 		aux_theme = aux_theme.replace(/#telefono#/g, req.body.telefono);
 
+		res.end(JSON.stringify({ op: 1 }));
+		/*
 		params.Message.Body.Html.Data = aux_theme;
 		ses.sendEmail(params, (err, data) => { 
 			if(!err){ 
@@ -404,6 +432,7 @@ app.post('/enviar_local', urlencodedParser, function(req, res){
 				res.end(JSON.stringify({ op: 2 }));
 			}
 		});
+		*/
 
 	}else{
 	
@@ -423,7 +452,7 @@ app.post('/cambiar_estado', urlencodedParser, function(req, res){
 function enviar_gmail(mailOptions){
 
 	var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
-	transporter.sendMail(mailOptions, function(error, info){
+	transporter.sendMail(mailOptions, function(err, info){
 		if(!err){
 			fecha_correos.push(new Date().getTime());
 			res.end(JSON.stringify({ op: 1 }));
@@ -441,18 +470,10 @@ function enviar_sesmail(mailOptions){
 		ReturnPath: 'misitiodelivery@gmail.com', 
 		Source: 'misitiodelivery@gmail.com'
 	};
-
 	params.Destination.ToAddresses.push(mailOptions.to);
 	params.Message.Subject.Data = mailOptions.subject;
 	params.Message.Body.Html.Data = mailOptions.body;
-
-	ses.sendEmail(params, (err, data) => { 
-		if(err){ 
-			res.end(JSON.stringify({ op: 1 }));
-		}else{
-			res.end(JSON.stringify({ op: 2 }));
-		}
-	});
+	ses.sendEmail(params);
 
 }
 http.listen(443, function(){
