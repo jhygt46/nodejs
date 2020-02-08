@@ -235,7 +235,7 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 			subject: subject,
 			html: aux_theme
 		};
-		var transporter = nodemailer.createTransport('smtps://diego.gomez.bezmalinovic@gmail.com:Ys9NmTw3xDZbd8S7e@smtp.gmail.com');
+		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
 		transporter.sendMail(mailOptions, function(err, info){
 			if(!err){
 				fecha_correos.push(new Date().getTime());
