@@ -19,6 +19,7 @@ var pedido_theme = fs.readFileSync("mail_template/pedido.html", { encoding: 'utf
 var inicio_theme = fs.readFileSync("mail_template/base.html", { encoding: 'utf8' });
 var recuperar_theme = fs.readFileSync("mail_template/recuperar.html", { encoding: 'utf8' });
 var reserva_theme = fs.readFileSync("mail_template/reserva.html", { encoding: 'utf8' });
+var jardin_theme = fs.readFileSync("mail_template/jardin.html", { encoding: 'utf8' });
 
 var nodemailer = require("nodemailer");
 var fecha_correos = new Array();
@@ -215,7 +216,37 @@ app.post('/mail_inicio', urlencodedParser, function(req, res){
 
 
 
+app.post('/mail_jardin', urlencodedParser, function(req, res){
 
+	if(req.body.code == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
+
+		res.setHeader('Content-Type', 'application/json');
+		var aux_theme = jardin_theme;
+		aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
+		aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
+		aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
+
+		if(req.body.subject == 1){ var subject = ''; }
+		if(req.body.subject == 2){ var subject = ''; }
+
+		var mailOptions = {
+			from: 'misitiodelivery@gmail.com',
+			to: req.body.correo,
+			subject: subject,
+			html: aux_theme
+		};
+		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
+		transporter.sendMail(mailOptions, function(err, info){
+			if(!err){
+				res.end(JSON.stringify({op: 1}));
+			}else{
+				res.end(JSON.stringify({op: 2, err: err, info: info}));
+			}
+		});
+
+	}
+
+});
 
 
 
@@ -403,41 +434,45 @@ app.post('/enviar_cocina', urlencodedParser, function(req, res){
 	}
 	res.end(JSON.stringify({op: 1}));
 });
+
+
+// ENVIAR AL LOCAL
 app.post('/enviar_local', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
-	io.emit('local-'+req.body.local_code, req.body.id_ped);
-	io.emit('cocina-'+req.body.local_code, req.body.id_ped);
 
 	if(req.body.accion == "enviar_pedido_local" && req.body.hash == "Lrk}..75sq[e)@/22jS?ZGJ<6hyjB~d4gp2>^qHm"){
 
-		const params = { Destination: { ToAddresses: [] }, Message: { Body: { Html: { Charset: 'UTF-8', Data: '' } }, Subject: { Charset: 'UTF-8', Data: '' }}, ReturnPath: 'misitiodelivery@gmail.com', Source: 'misitiodelivery@gmail.com'};
-		params.Destination.ToAddresses.push(req.body.correo);
-		params.Message.Subject.Data = 'Pedido #'+req.body.num_ped;
-		
-		var aux_theme = pedido_theme;
-		aux_theme = aux_theme.replace(/#dominio#/g, req.body.dominio);
-		aux_theme = aux_theme.replace(/#pedido_code#/g, req.body.pedido_code);
-		aux_theme = aux_theme.replace(/#telefono#/g, req.body.telefono);
+		if(req.body.enviar_pos == 1){
+			io.emit('local-'+req.body.local_code, req.body.id_ped);
+		}
+		if(req.body.enviar_cocina == 1){
+			io.emit('cocina-'+req.body.local_code, req.body.id_ped);
+		}
+		if(req.body.activar_envio == 1){
 
-		res.end(JSON.stringify({ op: 1 }));
-		/*
-		params.Message.Body.Html.Data = aux_theme;
-		ses.sendEmail(params, (err, data) => { 
-			if(!err){ 
-				//console.log(data.MessageId);
-				res.end(JSON.stringify({ op: 1 }));
-			}else{ 
-				//console.log(err);
-				res.end(JSON.stringify({ op: 2 }));
-			}
-		});
-		*/
+			const params = { Destination: { ToAddresses: [] }, Message: { Body: { Html: { Charset: 'UTF-8', Data: '' } }, Subject: { Charset: 'UTF-8', Data: '' }}, ReturnPath: 'misitiodelivery@gmail.com', Source: 'misitiodelivery@gmail.com'};
+			params.Destination.ToAddresses.push(req.body.correo);
+			params.Message.Subject.Data = 'Pedido #'+req.body.num_ped;
+			
+			var aux_theme = pedido_theme;
+			aux_theme = aux_theme.replace(/#dominio#/g, req.body.dominio);
+			aux_theme = aux_theme.replace(/#pedido_code#/g, req.body.pedido_code);
+			aux_theme = aux_theme.replace(/#telefono#/g, req.body.telefono);
+
+			params.Message.Body.Html.Data = aux_theme;
+			ses.sendEmail(params, (err, data) => { 
+				if(!err){ 
+					res.end(JSON.stringify({ op: 1 }));
+				}else{ 
+					res.end(JSON.stringify({ op: 2 }));
+				}
+			});
+			
+		}
 
 	}else{
-	
 		res.end(JSON.stringify({ op: 2 }));
-
 	}
 
 
