@@ -238,9 +238,10 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
 		transporter.sendMail(mailOptions, function(err, info){
 			if(!err){
-				res.end(JSON.stringify({op: 1}));
+				fecha_correos.push(new Date().getTime());
+				res.end(JSON.stringify({ op: 1 }));
 			}else{
-				res.end(JSON.stringify({op: 2, err: err, info: info}));
+				res.end(JSON.stringify({ op: 2, err: err, info: info }));
 			}
 		});
 
