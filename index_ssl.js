@@ -224,11 +224,15 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 
 		res.setHeader('Content-Type', 'application/json');
 
+		var correo = '';
 		var asunto = '';
+		var aux_theme = '';
+		
 		if(req.body.tipo == 1){
 
+			correo = req.body.correo;
 			asunto = 'Prestamo Libro ';
-			var aux_theme = jardin_theme;
+			aux_theme = jardin_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
 			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
 			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
@@ -236,19 +240,28 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 		}
 		if(req.body.tipo == 2){
 
-			asunto = 'Aviso de Atraso de Libro';
-			var aux_theme = jardin_atraso_theme;
+			correo = req.body.correo;
+			asunto = 'Aviso de Atraso de Libro ';
+			aux_theme = jardin_atraso_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
 			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
 			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
 
 		}
+		if(req.body.tipo == 3){
+
+			correo = 'valle-encantado@hotmail.com';
+			asunto = 'Contacto Sitio Web';
+			aux_theme = "Nombre: "+req.body.nombre+"<br/>Correo: "+req.body.correo+"<br/>Telefono: "+req.body.telefono+"<br/>Mensaje: "+req.body.mensaje;
+
+		}
 
 		var mailOptions = {
 			from: 'misitiodelivery@gmail.com',
-			to: req.body.correo,
+			to: correo,
 			subject: asunto,
-			html: aux_theme
+			html: aux_theme,
+			replyTo: 'valle-encantado@hotmail.com'
 		};
 		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
 		transporter.sendMail(mailOptions, function(err, info){
