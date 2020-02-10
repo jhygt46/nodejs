@@ -20,6 +20,8 @@ var inicio_theme = fs.readFileSync("mail_template/base.html", { encoding: 'utf8'
 var recuperar_theme = fs.readFileSync("mail_template/recuperar.html", { encoding: 'utf8' });
 var reserva_theme = fs.readFileSync("mail_template/reserva.html", { encoding: 'utf8' });
 var jardin_theme = fs.readFileSync("mail_template/jardin.html", { encoding: 'utf8' });
+var jardin_atraso_theme = fs.readFileSync("mail_template/jardin_atraso.html", { encoding: 'utf8' });
+
 
 var nodemailer = require("nodemailer");
 var fecha_correos = new Array();
@@ -221,18 +223,31 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 	if(req.body.code == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
 
 		res.setHeader('Content-Type', 'application/json');
-		var aux_theme = jardin_theme;
-		aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
-		aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
-		aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
 
-		if(req.body.subject == 1){ var subject = ''; }
-		if(req.body.subject == 2){ var subject = ''; }
+		var asunto = '';
+		if(req.body.tipo == 1){
+
+			asunto = 'Prestamo Libro ';
+			var aux_theme = jardin_theme;
+			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
+			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
+			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
+
+		}
+		if(req.body.tipo == 2){
+
+			asunto = 'Aviso de Atraso de Libro';
+			var aux_theme = jardin_atraso_theme;
+			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
+			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
+			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
+
+		}
 
 		var mailOptions = {
 			from: 'misitiodelivery@gmail.com',
 			to: req.body.correo,
-			subject: subject,
+			subject: asunto,
 			html: aux_theme
 		};
 		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
