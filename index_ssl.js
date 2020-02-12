@@ -21,6 +21,7 @@ var recuperar_theme = fs.readFileSync("mail_template/recuperar.html", { encoding
 var reserva_theme = fs.readFileSync("mail_template/reserva.html", { encoding: 'utf8' });
 var jardin_theme = fs.readFileSync("mail_template/jardin.html", { encoding: 'utf8' });
 var jardin_atraso_theme = fs.readFileSync("mail_template/jardin_atraso.html", { encoding: 'utf8' });
+var jardin_sin_bolsa_theme = fs.readFileSync("mail_template/jardin_sin_bolsa.html", { encoding: 'utf8' });
 
 
 var nodemailer = require("nodemailer");
@@ -253,6 +254,16 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 			correo = 'valle-encantado@hotmail.com';
 			asunto = 'Contacto Sitio Web';
 			aux_theme = "Nombre: "+req.body.nombre+"<br/>Correo: "+req.body.correo+"<br/>Telefono: "+req.body.telefono+"<br/>Mensaje: "+req.body.mensaje;
+
+		}
+		if(req.body.tipo == 4){
+
+			correo = req.body.correo;
+			asunto = 'Aviso sin bolsa ';
+			aux_theme = jardin_sin_bolsa_theme;
+			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
+			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
+			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
 
 		}
 
