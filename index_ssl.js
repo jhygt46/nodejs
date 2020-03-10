@@ -266,8 +266,10 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 		transporter.sendMail(mailOptions, function(err, info){
 			if(!err){
 				fecha_correos.push(new Date().getTime());
+				console.log("ENVIADO");
 				res.end(JSON.stringify({ op: 1 }));
 			}else{
+				console.log("ERROR");
 				res.end(JSON.stringify({ err: err, info: info }));
 			}
 		});
