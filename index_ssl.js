@@ -232,17 +232,16 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 		if(req.body.tipo == 1){
 
 			correo = req.body.correo;
-			asunto = 'Prestamo Libro ';
+			asunto = 'Va a tu casa '+req.body.libro;
 			aux_theme = jardin_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
 			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
-			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
 
 		}
 		if(req.body.tipo == 2){
 
 			correo = req.body.correo;
-			asunto = 'Aviso de Atraso de Libro ';
+			asunto = 'Cuento sin devolver';
 			aux_theme = jardin_atraso_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
 			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
@@ -259,22 +258,20 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 		if(req.body.tipo == 4){
 
 			correo = req.body.correo;
-			asunto = 'Aviso sin bolsa ';
+			asunto = 'No va cuento :(';
 			aux_theme = jardin_sin_bolsa_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
-			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
-			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
 
 		}
 
 		var mailOptions = {
-			from: 'misitiodelivery@gmail.com',
+			from: 'bibliotecavalleencantado@gmail.com',
 			to: correo,
 			subject: asunto,
 			html: aux_theme,
 			replyTo: 'valle-encantado@hotmail.com'
 		};
-		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:dVGbBSxi9Hon8Bqx@smtp.gmail.com');
+		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:ve7589500ve@smtp.gmail.com');
 		transporter.sendMail(mailOptions, function(err, info){
 			if(!err){
 				fecha_correos.push(new Date().getTime());
