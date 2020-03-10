@@ -222,7 +222,7 @@ app.post('/mail_inicio', urlencodedParser, function(req, res){
 app.post('/mail_jardin', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
-	res.end(JSON.stringify((req.body));
+	res.end(JSON.stringify(req.body));
 
 	if(req.body.code == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
 
