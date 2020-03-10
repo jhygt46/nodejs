@@ -271,7 +271,7 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 			html: aux_theme,
 			replyTo: 'valle-encantado@hotmail.com'
 		};
-		var transporter = nodemailer.createTransport('smtps://misitiodelivery@gmail.com:ve7589500ve@smtp.gmail.com');
+		var transporter = nodemailer.createTransport('smtps://bibliotecavalleencantado@gmail.com:ve7589500ve@smtp.gmail.com');
 		transporter.sendMail(mailOptions, function(err, info){
 			if(!err){
 				fecha_correos.push(new Date().getTime());
