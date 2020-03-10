@@ -277,7 +277,7 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 				fecha_correos.push(new Date().getTime());
 				res.end(JSON.stringify({ op: 1 }));
 			}else{
-				res.end(JSON.stringify(err));
+				res.end(JSON.stringify({ err: err, info: info }));
 			}
 		});
 
