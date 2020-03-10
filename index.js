@@ -5,6 +5,12 @@ http.createServer(function (req, res) {
     res.end();
 }).listen(80);
 */
+var fs = require("fs");
+
+var jardin_theme = fs.readFileSync("mail_template/jardin.html", { encoding: 'utf8' });
+var jardin_atraso_theme = fs.readFileSync("mail_template/jardin_atraso.html", { encoding: 'utf8' });
+var jardin_sin_bolsa_theme = fs.readFileSync("mail_template/jardin_sin_bolsa.html", { encoding: 'utf8' });
+
 const express = require("express");
 const app = express();
 
