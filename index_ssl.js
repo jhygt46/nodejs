@@ -221,47 +221,38 @@ app.post('/mail_inicio', urlencodedParser, function(req, res){
 
 app.post('/mail_jardin', urlencodedParser, function(req, res){
 
-	if(req.body.code == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
+	res.setHeader('Content-Type', 'application/json');
 
-		res.setHeader('Content-Type', 'application/json');
+	if(req.body.code == "k8Dqa2C9lKgxT6kpNs1z6RgKb0r3WaCvN6RjK7rU"){
 
 		var correo = '';
 		var asunto = '';
 		var aux_theme = '';
-		
 		if(req.body.tipo == 1){
-
 			correo = req.body.correo;
 			asunto = 'Va a tu casa '+req.body.libro;
 			aux_theme = jardin_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
 			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
-
 		}
 		if(req.body.tipo == 2){
-
 			correo = req.body.correo;
 			asunto = 'Cuento sin devolver';
 			aux_theme = jardin_atraso_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
 			aux_theme = aux_theme.replace(/#LIBRO#/g, req.body.libro);
 			aux_theme = aux_theme.replace(/#FECHA#/g, req.body.fecha);
-
 		}
 		if(req.body.tipo == 3){
-
 			correo = 'valle-encantado@hotmail.com';
 			asunto = 'Contacto Sitio Web';
 			aux_theme = "Nombre: "+req.body.nombre+"<br/>Correo: "+req.body.correo+"<br/>Telefono: "+req.body.telefono+"<br/>Mensaje: "+req.body.mensaje;
-
 		}
 		if(req.body.tipo == 4){
-
 			correo = req.body.correo;
 			asunto = 'No va cuento :(';
 			aux_theme = jardin_sin_bolsa_theme;
 			aux_theme = aux_theme.replace(/#NOMBRE#/g, req.body.nombre);
-
 		}
 
 		var mailOptions = {
@@ -281,6 +272,8 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 			}
 		});
 
+	}else{
+		res.end(JSON.stringify({ err: "code" }));
 	}
 
 });
