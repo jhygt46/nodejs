@@ -55,8 +55,10 @@ var download = function(url, dest, cb) {
 
 app.get('/get_videos', function(req, res){
 	request('http://jardinvalleencantado.cl/online/videos/', function (error, response, body){
-		console.log(body);
-		console.log(JSON.parse(body));
+		
+		for(var i=0, ilen=body.length; i<ilen; i++){
+			console.log(body[i]);
+		}
 		/*
 		body.forEach(element => {
 			download('http://jardinvalleencantado.cl/online/videos/'+element, '/var/videos/'+element, function(){ console.log(element+" => copiado"); });
