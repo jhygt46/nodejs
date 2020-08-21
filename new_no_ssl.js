@@ -57,16 +57,10 @@ app.get('/get_videos', function(req, res){
 	request('http://jardinvalleencantado.cl/online/videos/', function (error, response, body){
 		
 		var x = JSON.parse(body);
-		console.log(x[0]);
-
-		for(var i=0, ilen=body.length; i<ilen; i++){
-			//console.log(body[i]);
-		}
-		/*
-		body.forEach(element => {
+		x.forEach(element => {
 			download('http://jardinvalleencantado.cl/online/videos/'+element, '/var/videos/'+element, function(){ console.log(element+" => copiado"); });
 		});
-		*/
+		
 	});
 });
 
