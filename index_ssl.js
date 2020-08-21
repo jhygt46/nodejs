@@ -280,9 +280,6 @@ app.post('/mail_jardin', urlencodedParser, function(req, res){
 	}
 
 });
-
-
-
 app.post('/mail_recuperar', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
@@ -331,6 +328,9 @@ app.post('/mail_recuperar_medici', urlencodedParser, function(req, res){
 	});
 
 });
+
+
+
 app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 
 	res.setHeader('Content-Type', 'application/json');
