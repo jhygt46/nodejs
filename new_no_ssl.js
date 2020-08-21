@@ -54,10 +54,14 @@ var download = function(url, dest, cb) {
 }
 
 app.get('/get_videos', function(req, res){
-	request('http://jardinvalleencantado.cl/online/videos/', function (error, response, body) {
+	request('http://jardinvalleencantado.cl/online/videos/', function (error, response, body){
+		console.log(body);
+		console.log(JSON.parse(body));
+		/*
 		body.forEach(element => {
 			download('http://jardinvalleencantado.cl/online/videos/'+element, '/var/videos/'+element, function(){ console.log(element+" => copiado"); });
 		});
+		*/
 	});
 });
 
