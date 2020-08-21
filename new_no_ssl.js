@@ -43,7 +43,9 @@ app.get('/', urlencodedParser, function(req, res){
 
 app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 
-	res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ op: 3 }));
+    
 	var mailOptions = {
 		from: 'misitiodelivery@gmail.com',
 		to: 'diego.gomez.bezmalinovic@gmail.com',
@@ -80,7 +82,7 @@ app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 		}
     });
     
-    res.end(JSON.stringify({ op: 3 }));
+    
 
 });
 app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
