@@ -43,7 +43,7 @@ app.get('/', urlencodedParser, function(req, res){
 
 app.get('/video', function(req, res) {
 
-	const path = '/var/videos/'+req.query.video+'.mp4';
+	const path = '/var/videos/'+req.query.video;
 	const stat = fs.statSync(path);
 	const fileSize = stat.size;
 	const range = req.headers.range;
