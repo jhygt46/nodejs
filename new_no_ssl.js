@@ -60,7 +60,7 @@ app.get('/get_videos', function(req, res){
 		console.log(body);
 
 		for(var i=0, ilen=body.length; i<ilen; i++){
-			console.log(body[i]);
+			//console.log(body[i]);
 		}
 		/*
 		body.forEach(element => {
