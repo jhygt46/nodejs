@@ -56,6 +56,9 @@ var download = function(url, dest, cb) {
 app.get('/get_videos', function(req, res){
 	request('http://jardinvalleencantado.cl/online/videos/', function (error, response, body){
 		
+		console.log(body.length);
+		console.log(body);
+
 		for(var i=0, ilen=body.length; i<ilen; i++){
 			console.log(body[i]);
 		}
