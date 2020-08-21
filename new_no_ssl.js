@@ -78,7 +78,9 @@ app.post('/mail_contacto_medici', urlencodedParser, function(req, res){
 		}else{
 			res.end(JSON.stringify({ op: 2 }));
 		}
-	});
+    });
+    
+    res.end(JSON.stringify({ op: 3 }));
 
 });
 app.post('/mail_reserva_medici', urlencodedParser, function(req, res){
