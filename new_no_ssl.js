@@ -41,7 +41,17 @@ app.get('/', urlencodedParser, function(req, res){
 
 });
 
-app.get('/video', function(req, res) {
+const request = require('request');
+
+app.get('/get_videos', function(req, res){
+
+	request('http://jardinvalleencantado.cl/online/videos/', function (error, response, body) {
+		console.log(body);
+	});
+
+});
+
+app.get('/video', function(req, res){
 
 	const path = '/var/videos/'+req.query.video;
 	const stat = fs.statSync(path);
